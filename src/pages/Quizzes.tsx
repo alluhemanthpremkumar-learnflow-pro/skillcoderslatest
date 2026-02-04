@@ -1,0 +1,202 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Brain, Trophy, Zap, Clock, Target, ChevronRight, Star, Lock, CheckCircle } from 'lucide-react';
+import ParticleBackground from '@/components/ParticleBackground';
+import Navbar from '@/components/Navbar';
+import GlowCard from '@/components/GlowCard';
+import GlowText from '@/components/GlowText';
+import GlowButton from '@/components/GlowButton';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+
+const domains = [
+  { id: 1, name: 'Web Security', icon: '🌐', questions: 1500, completed: 0 },
+  { id: 2, name: 'Network Security', icon: '🔗', questions: 1200, completed: 0 },
+  { id: 3, name: 'Cryptography', icon: '🔐', questions: 800, completed: 0 },
+  { id: 4, name: 'Malware Analysis', icon: '🦠', questions: 600, completed: 0 },
+  { id: 5, name: 'Forensics', icon: '🔍', questions: 900, completed: 0 },
+  { id: 6, name: 'Reverse Engineering', icon: '⚙️', questions: 700, completed: 0 },
+];
+
+const levels = Array.from({ length: 10 }, (_, i) => ({
+  level: i + 1,
+  questions: i < 5 ? 10 + i * 10 : 100 + (i - 5) * 200,
+  credits: (i + 1) * 50,
+  unlocked: i === 0,
+}));
+
+const Quizzes = () => {
+  const [selectedDomain, setSelectedDomain] = useState<number | null>(null);
+  const [currentLevel, setCurrentLevel] = useState(1);
+
+  return (
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      <ParticleBackground />
+      <Navbar />
+
+      <main className="pt-24 pb-12 px-4">
+        <div className="container mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-12"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/10 border border-secondary/30 mb-4">
+              <Brain className="w-4 h-4 text-secondary" />
+              <span className="text-sm text-secondary font-medium">Quiz Arena</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <GlowText as="span" color="gradient" animate={false}>
+                100 Level
+              </GlowText>
+              {' '}Challenge
+            </h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Progress through 100 levels of increasingly challenging quizzes. 
+              Each level unlocks more questions and higher credit rewards.
+            </p>
+          </motion.div>
+
+          {/* Stats Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          >
+            {[
+              { icon: Target, label: 'Current Level', value: '1', color: 'text-primary' },
+              { icon: Trophy, label: 'Total Credits', value: '0', color: 'text-yellow-500' },
+              { icon: CheckCircle, label: 'Completed', value: '0/100', color: 'text-green-500' },
+              { icon: Zap, label: 'Streak', value: '0 days', color: 'text-secondary' },
+            ].map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + index * 0.1 }}
+                className="bg-card border border-border rounded-xl p-4 text-center"
+              >
+                <stat.icon className={`w-6 h-6 mx-auto mb-2 ${stat.color}`} />
+                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-sm text-muted-foreground">{stat.label}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Domain Selection */}
+            <div className="lg:col-span-1">
+              <h2 className="text-xl font-semibold mb-4">Select Domain</h2>
+              <div className="space-y-3">
+                {domains.map((domain, index) => (
+                  <motion.div
+                    key={domain.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + index * 0.05 }}
+                  >
+                    <button
+                      onClick={() => setSelectedDomain(domain.id)}
+                      className={`w-full p-4 rounded-xl border text-left transition-all ${
+                        selectedDomain === domain.id
+                          ? 'border-primary bg-primary/10'
+                          : 'border-border bg-card hover:border-primary/50'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{domain.icon}</span>
+                          <div>
+                            <p className="font-medium">{domain.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {domain.questions} questions
+                            </p>
+                          </div>
+                        </div>
+                        <ChevronRight className={`w-5 h-5 transition-transform ${
+                          selectedDomain === domain.id ? 'text-primary rotate-90' : 'text-muted-foreground'
+                        }`} />
+                      </div>
+                    </button>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Levels */}
+            <div className="lg:col-span-2">
+              <h2 className="text-xl font-semibold mb-4">Progress Through Levels</h2>
+              <div className="grid sm:grid-cols-2 gap-4">
+                {levels.map((level, index) => (
+                  <motion.div
+                    key={level.level}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 + index * 0.05 }}
+                  >
+                    <GlowCard 
+                      glowColor={level.unlocked ? 'blue' : 'purple'} 
+                      hover={level.unlocked}
+                      className={!level.unlocked ? 'opacity-60' : ''}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          {level.unlocked ? (
+                            <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
+                              <span className="text-lg font-bold text-primary">{level.level}</span>
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                              <Lock className="w-5 h-5 text-muted-foreground" />
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-semibold">Level {level.level}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {level.questions} questions
+                            </p>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="border-yellow-500/50 text-yellow-500">
+                          <Star className="w-3 h-3 mr-1 fill-current" />
+                          {level.credits}
+                        </Badge>
+                      </div>
+
+                      {level.unlocked && (
+                        <>
+                          <Progress value={0} className="h-2 mb-3" />
+                          <GlowButton 
+                            variant="primary" 
+                            size="sm" 
+                            className="w-full"
+                            disabled={!selectedDomain}
+                          >
+                            {selectedDomain ? 'Start Quiz' : 'Select Domain First'}
+                          </GlowButton>
+                        </>
+                      )}
+                    </GlowCard>
+                  </motion.div>
+                ))}
+              </div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-center text-muted-foreground mt-6"
+              >
+                Complete levels 1-50 to unlock expert challenges with 100-10,000 questions per level!
+              </motion.p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Quizzes;
