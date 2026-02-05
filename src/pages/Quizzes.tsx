@@ -1,28 +1,76 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Brain, Trophy, Zap, Clock, Target, ChevronRight, Star, Lock, CheckCircle } from 'lucide-react';
-import ParticleBackground from '@/components/ParticleBackground';
-import Navbar from '@/components/Navbar';
+ import { useState, useMemo } from 'react';
+ import { motion } from 'framer-motion';
+ import { Brain, Trophy, Zap, Target, ChevronRight, Star, Lock, CheckCircle } from 'lucide-react';
+ import ParticleBackground from '@/components/ParticleBackground';
+ import Navbar from '@/components/Navbar';
  import Footer from '@/components/Footer';
-import GlowCard from '@/components/GlowCard';
- import { quizDomains, getLevelQuestions, getLevelCredits } from '@/data/quizQuestions';
-import GlowText from '@/components/GlowText';
-import GlowButton from '@/components/GlowButton';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-
+ import GlowCard from '@/components/GlowCard';
+ import { quizDomains, getLevelQuestions, getLevelCredits, sampleQuestions, QuizQuestion } from '@/data/quizQuestions';
+ import GlowText from '@/components/GlowText';
+ import GlowButton from '@/components/GlowButton';
+ import QuizModal from '@/components/QuizModal';
+ import { Badge } from '@/components/ui/badge';
+ import { Progress } from '@/components/ui/progress';
+ 
  const domains = quizDomains.map((d) => ({ ...d, completed: 0 }));
-
-const levels = Array.from({ length: 10 }, (_, i) => ({
-  level: i + 1,
+ 
+ const levels = Array.from({ length: 10 }, (_, i) => ({
+   level: i + 1,
    questions: getLevelQuestions(i + 1),
    credits: getLevelCredits(i + 1),
-  unlocked: i === 0,
-}));
-
-const Quizzes = () => {
-  const [selectedDomain, setSelectedDomain] = useState<number | null>(null);
-  const [currentLevel, setCurrentLevel] = useState(1);
+   unlocked: i === 0,
+ }));
+ 
+ const Quizzes = () => {
+   const [selectedDomain, setSelectedDomain] = useState<number | null>(null);
+   const [showQuiz, setShowQuiz] = useState(false);
+   const [activeLevel, setActiveLevel] = useState(1);
+   const [userStats, setUserStats] = useState({
+     currentLevel: 1,
+     totalCredits: 0,
+     completed: 0,
+     streak: 0,
+   });
+ 
+   const getQuestionsForDomain = (domainId: number): QuizQuestion[] => {
+     const domain = quizDomains.find(d => d.id === domainId);
+     if (!domain) return [];
+     const domainQuestions = sampleQuestions.filter(q => q.domain === domain.name);
+     if (domainQuestions.length === 0) {
+       // Fallback to all questions if no domain-specific ones
+       return sampleQuestions.slice(0, 5);
+     }
+     return domainQuestions.slice(0, 5);
+   };
+ 
+   const selectedDomainData = useMemo(() => {
+     return quizDomains.find(d => d.id === selectedDomain);
+   }, [selectedDomain]);
+ 
+   const handleStartQuiz = (level: number) => {
+     if (!selectedDomain) return;
+     setActiveLevel(level);
+     setShowQuiz(true);
+   };
+ 
+   const handleQuizComplete = (score: number, total: number) => {
+     const passed = score >= total * 0.7;
+     if (passed) {
+       const credits = getLevelCredits(activeLevel);
+       setUserStats(prev => ({
+         ...prev,
+         totalCredits: prev.totalCredits + credits,
+         completed: prev.completed + 1,
+         currentLevel: Math.max(prev.currentLevel, activeLevel + 1),
+         streak: prev.streak + 1,
+       }));
+     }
+   };
+ 
+   const quizQuestions = useMemo(() => {
+     if (!selectedDomain) return [];
+     return getQuestionsForDomain(selectedDomain);
+   }, [selectedDomain]);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -61,10 +109,10 @@ const Quizzes = () => {
             className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
           >
             {[
-              { icon: Target, label: 'Current Level', value: '1', color: 'text-primary' },
-              { icon: Trophy, label: 'Total Credits', value: '0', color: 'text-yellow-500' },
-              { icon: CheckCircle, label: 'Completed', value: '0/100', color: 'text-green-500' },
-              { icon: Zap, label: 'Streak', value: '0 days', color: 'text-secondary' },
+               { icon: Target, label: 'Current Level', value: String(userStats.currentLevel), color: 'text-primary' },
+               { icon: Trophy, label: 'Total Credits', value: String(userStats.totalCredits), color: 'text-yellow-500' },
+               { icon: CheckCircle, label: 'Completed', value: `${userStats.completed}/100`, color: 'text-green-500' },
+               { icon: Zap, label: 'Streak', value: `${userStats.streak} days`, color: 'text-secondary' },
             ].map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -168,6 +216,7 @@ const Quizzes = () => {
                             size="sm" 
                             className="w-full"
                             disabled={!selectedDomain}
+                           onClick={() => handleStartQuiz(level.level)}
                           >
                             {selectedDomain ? 'Start Quiz' : 'Select Domain First'}
                           </GlowButton>
@@ -190,7 +239,17 @@ const Quizzes = () => {
           </div>
         </div>
       </main>
-     <Footer />
+       <Footer />
+ 
+       <QuizModal
+         isOpen={showQuiz}
+         onClose={() => setShowQuiz(false)}
+         questions={quizQuestions}
+         domainName={selectedDomainData?.name || ''}
+         level={activeLevel}
+         creditsReward={getLevelCredits(activeLevel)}
+         onComplete={handleQuizComplete}
+       />
     </div>
   );
 };
