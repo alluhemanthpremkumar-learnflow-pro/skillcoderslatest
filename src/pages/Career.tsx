@@ -1,13 +1,18 @@
-import { motion } from 'framer-motion';
+ import { useState } from 'react';
+ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Users, Briefcase, Clock, DollarSign, Star, ArrowRight, CheckCircle, GraduationCap, Award, TrendingUp } from 'lucide-react';
+ import { Users, Briefcase, Clock, DollarSign, Star, ArrowRight, CheckCircle, GraduationCap, TrendingUp, Calendar, Send } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
 import GlowButton from '@/components/GlowButton';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+ import { Input } from '@/components/ui/input';
+ import { Textarea } from '@/components/ui/textarea';
+ import { useToast } from '@/hooks/use-toast';
 
 const instructors = [
   {
@@ -67,7 +72,61 @@ const benefits = [
   { icon: TrendingUp, title: 'Growth Platform', description: 'Build your personal brand and reputation' },
 ];
 
+ const internships = [
+   {
+     id: 1,
+     title: 'Frontend Development Intern',
+     duration: '3 months',
+     stipend: '₹10,000 - ₹15,000/month',
+     skills: ['React', 'TypeScript', 'Tailwind CSS'],
+     spots: 5,
+   },
+   {
+     id: 2,
+     title: 'Backend Development Intern',
+     duration: '3 months',
+     stipend: '₹12,000 - ₹18,000/month',
+     skills: ['Node.js', 'PostgreSQL', 'REST APIs'],
+     spots: 3,
+   },
+   {
+     id: 3,
+     title: 'Cybersecurity Intern',
+     duration: '6 months',
+     stipend: '₹15,000 - ₹25,000/month',
+     skills: ['Penetration Testing', 'Network Security', 'OWASP'],
+     spots: 2,
+   },
+   {
+     id: 4,
+     title: 'Full Stack Development Intern',
+     duration: '4 months',
+     stipend: '₹15,000 - ₹20,000/month',
+     skills: ['React', 'Node.js', 'MongoDB'],
+     spots: 4,
+   },
+ ];
+ 
 const Career = () => {
+   const { toast } = useToast();
+   const [formData, setFormData] = useState({
+     name: '',
+     email: '',
+     phone: '',
+     position: '',
+     message: '',
+   });
+ 
+   const handleSubmit = (e: React.FormEvent) => {
+     e.preventDefault();
+     console.log('Form submitted:', formData);
+     toast({
+       title: 'Application Submitted!',
+       description: 'We will contact you soon at ' + formData.email,
+     });
+     setFormData({ name: '', email: '', phone: '', position: '', message: '' });
+   };
+ 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
       <ParticleBackground />
@@ -184,6 +243,151 @@ const Career = () => {
             </div>
           </motion.section>
 
+         {/* Internship Section */}
+         <motion.section
+           id="internship"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.25 }}
+           className="mb-16"
+         >
+           <div className="text-center mb-8">
+             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-4">
+               <GraduationCap className="w-4 h-4 text-primary" />
+               <span className="text-sm text-primary font-medium">Internship Program</span>
+             </div>
+             <h2 className="text-2xl font-bold mb-2">
+               Launch Your Career with{' '}
+               <GlowText as="span" color="blue" animate={false}>
+                 Internships
+               </GlowText>
+             </h2>
+             <p className="text-muted-foreground">
+               Gain real-world experience with our structured internship programs
+             </p>
+           </div>
+ 
+           <div className="grid md:grid-cols-2 gap-6">
+             {internships.map((internship, index) => (
+               <motion.div
+                 key={internship.id}
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.3 + index * 0.1 }}
+               >
+                 <GlowCard glowColor="cyan">
+                   <div className="flex items-start justify-between mb-4">
+                     <div>
+                       <h3 className="font-semibold text-lg">{internship.title}</h3>
+                       <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                         <Calendar className="w-4 h-4" />
+                         {internship.duration}
+                       </div>
+                     </div>
+                     <Badge variant="outline" className="border-primary/50 text-primary">
+                       {internship.spots} spots left
+                     </Badge>
+                   </div>
+                   
+                   <p className="text-primary font-semibold mb-3">{internship.stipend}</p>
+                   
+                   <div className="flex flex-wrap gap-2 mb-4">
+                     {internship.skills.map((skill) => (
+                       <Badge key={skill} variant="secondary" className="text-xs">
+                         {skill}
+                       </Badge>
+                     ))}
+                   </div>
+                   
+                   <GlowButton variant="outline" size="sm" className="w-full">
+                     Apply Now
+                   </GlowButton>
+                 </GlowCard>
+               </motion.div>
+             ))}
+           </div>
+         </motion.section>
+ 
+         {/* Application Form */}
+         <motion.section
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ delay: 0.35 }}
+           className="mb-16"
+         >
+           <GlowCard glowColor="purple" className="max-w-2xl mx-auto">
+             <div className="text-center mb-6">
+               <h2 className="text-2xl font-bold mb-2">Apply Now</h2>
+               <p className="text-muted-foreground">
+                 Submit your application and join our team
+               </p>
+             </div>
+             
+             <form onSubmit={handleSubmit} className="space-y-4">
+               <div className="grid md:grid-cols-2 gap-4">
+                 <div>
+                   <label className="text-sm font-medium mb-2 block">Full Name</label>
+                   <Input
+                     placeholder="John Doe"
+                     value={formData.name}
+                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                     required
+                   />
+                 </div>
+                 <div>
+                   <label className="text-sm font-medium mb-2 block">Email</label>
+                   <Input
+                     type="email"
+                     placeholder="john@example.com"
+                     value={formData.email}
+                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                     required
+                   />
+                 </div>
+               </div>
+               
+               <div className="grid md:grid-cols-2 gap-4">
+                 <div>
+                   <label className="text-sm font-medium mb-2 block">Phone</label>
+                   <Input
+                     placeholder="+91 9876543210"
+                     value={formData.phone}
+                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                     required
+                   />
+                 </div>
+                 <div>
+                   <label className="text-sm font-medium mb-2 block">Position</label>
+                   <Input
+                     placeholder="Frontend Developer / Instructor"
+                     value={formData.position}
+                     onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                     required
+                   />
+                 </div>
+               </div>
+               
+               <div>
+                 <label className="text-sm font-medium mb-2 block">Message</label>
+                 <Textarea
+                   placeholder="Tell us about yourself and why you want to join..."
+                   rows={4}
+                   value={formData.message}
+                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                   required
+                 />
+               </div>
+               
+               <GlowButton type="submit" variant="secondary" className="w-full">
+                 <span className="flex items-center gap-2">
+                   <Send className="w-4 h-4" />
+                   Submit Application
+                 </span>
+               </GlowButton>
+             </form>
+           </GlowCard>
+         </motion.section>
+ 
           {/* Top Instructors */}
           <motion.section
             initial={{ opacity: 0, y: 30 }}
@@ -253,6 +457,7 @@ const Career = () => {
           </motion.section>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };

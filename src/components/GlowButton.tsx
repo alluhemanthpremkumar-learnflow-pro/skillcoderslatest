@@ -9,6 +9,7 @@ interface GlowButtonProps {
   className?: string;
   onClick?: () => void;
   disabled?: boolean;
+   type?: 'button' | 'submit' | 'reset';
 }
 
 const GlowButton = ({
@@ -18,6 +19,7 @@ const GlowButton = ({
   className,
   onClick,
   disabled = false,
+   type = 'button',
 }: GlowButtonProps) => {
   const baseStyles = "relative font-semibold rounded-lg transition-all duration-300 overflow-hidden";
   
@@ -38,6 +40,7 @@ const GlowButton = ({
       className={cn(baseStyles, variants[variant], sizes[size], className)}
       onClick={onClick}
       disabled={disabled}
+     type={type}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >

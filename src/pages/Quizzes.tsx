@@ -3,25 +3,20 @@ import { motion } from 'framer-motion';
 import { Brain, Trophy, Zap, Clock, Target, ChevronRight, Star, Lock, CheckCircle } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
+ import { quizDomains, getLevelQuestions, getLevelCredits } from '@/data/quizQuestions';
 import GlowText from '@/components/GlowText';
 import GlowButton from '@/components/GlowButton';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
-const domains = [
-  { id: 1, name: 'Web Security', icon: '🌐', questions: 1500, completed: 0 },
-  { id: 2, name: 'Network Security', icon: '🔗', questions: 1200, completed: 0 },
-  { id: 3, name: 'Cryptography', icon: '🔐', questions: 800, completed: 0 },
-  { id: 4, name: 'Malware Analysis', icon: '🦠', questions: 600, completed: 0 },
-  { id: 5, name: 'Forensics', icon: '🔍', questions: 900, completed: 0 },
-  { id: 6, name: 'Reverse Engineering', icon: '⚙️', questions: 700, completed: 0 },
-];
+ const domains = quizDomains.map((d) => ({ ...d, completed: 0 }));
 
 const levels = Array.from({ length: 10 }, (_, i) => ({
   level: i + 1,
-  questions: i < 5 ? 10 + i * 10 : 100 + (i - 5) * 200,
-  credits: (i + 1) * 50,
+   questions: getLevelQuestions(i + 1),
+   credits: getLevelCredits(i + 1),
   unlocked: i === 0,
 }));
 
@@ -195,6 +190,7 @@ const Quizzes = () => {
           </div>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };
