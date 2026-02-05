@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Search, ShoppingCart, Star, Shield, Cpu, Headphones, Usb, Wifi, ExternalLink } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
 import GlowButton from '@/components/GlowButton';
@@ -184,6 +185,7 @@ const Gadgets = () => {
           </div>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };

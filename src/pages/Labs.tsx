@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Terminal, Server, Monitor, Play, Clock, Shield, Cpu, HardDrive, Zap } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
 import GlowButton from '@/components/GlowButton';
@@ -199,6 +200,7 @@ const Labs = () => {
           </div>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };

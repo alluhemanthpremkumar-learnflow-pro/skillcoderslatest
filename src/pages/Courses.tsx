@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Search, Filter, Clock, Users, Star, Play, BookOpen } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
 import { Input } from '@/components/ui/input';
@@ -213,6 +214,7 @@ const Courses = () => {
           </div>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };

@@ -3,12 +3,15 @@ import { motion } from 'framer-motion';
 import { Swords, Users, Trophy, Clock, Shield, Zap, Play, Crown, IndianRupee } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowButton from '@/components/GlowButton';
 import GlowText from '@/components/GlowText';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+ import { Slider } from '@/components/ui/slider';
+ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const activeBattles = [
   {
@@ -58,6 +61,14 @@ const upcomingBattles = [
 
 const Battle = () => {
   const [selectedTeam, setSelectedTeam] = useState<'red' | 'blue' | null>(null);
+   const [bidAmount, setBidAmount] = useState(50);
+   const [showJoinDialog, setShowJoinDialog] = useState(false);
+   const [selectedBattle, setSelectedBattle] = useState<number | null>(null);
+ 
+   const handleJoinBattle = (battleId: number) => {
+     setSelectedBattle(battleId);
+     setShowJoinDialog(true);
+   };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -203,7 +214,9 @@ const Battle = () => {
                         </div>
                       </div>
                       <GlowButton variant="primary">
-                        Join Battle
+                       <span onClick={(e) => { e.stopPropagation(); handleJoinBattle(battle.id); }}>
+                         Join Battle
+                       </span>
                       </GlowButton>
                     </div>
                   </GlowCard>
@@ -266,8 +279,81 @@ const Battle = () => {
               ))}
             </div>
           </section>
+         {/* Join Battle Dialog */}
+         <Dialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
+           <DialogContent className="sm:max-w-md">
+             <DialogHeader>
+               <DialogTitle className="text-center">
+                 <span className="text-primary">Join</span> Battle Arena
+               </DialogTitle>
+             </DialogHeader>
+             <div className="space-y-6 py-4">
+               <div className="text-center">
+                 <p className="text-muted-foreground mb-4">
+                   Set your bid amount to join the battle
+                 </p>
+                 <div className="text-4xl font-bold text-primary mb-2">
+                   ₹{bidAmount.toLocaleString()}
+                 </div>
+               </div>
+               
+               <div className="space-y-4">
+                 <div className="flex justify-between text-sm text-muted-foreground">
+                   <span>Min: ₹50</span>
+                   <span>Max: ₹1,00,000</span>
+                 </div>
+                 <Slider
+                   value={[bidAmount]}
+                   onValueChange={(value) => setBidAmount(value[0])}
+                   min={50}
+                   max={100000}
+                   step={50}
+                   className="w-full"
+                 />
+                 <div className="grid grid-cols-4 gap-2">
+                   {[100, 500, 1000, 5000].map((amount) => (
+                     <Button
+                       key={amount}
+                       variant="outline"
+                       size="sm"
+                       onClick={() => setBidAmount(amount)}
+                       className={bidAmount === amount ? 'border-primary text-primary' : ''}
+                     >
+                       ₹{amount}
+                     </Button>
+                   ))}
+                 </div>
+               </div>
+ 
+               <div className="bg-card border border-border rounded-lg p-4 space-y-2">
+                 <div className="flex justify-between text-sm">
+                   <span className="text-muted-foreground">Bid Amount</span>
+                   <span>₹{bidAmount.toLocaleString()}</span>
+                 </div>
+                 <div className="flex justify-between text-sm">
+                   <span className="text-muted-foreground">Platform Fee (5%)</span>
+                   <span>₹{(bidAmount * 0.05).toLocaleString()}</span>
+                 </div>
+                 <div className="border-t border-border pt-2 flex justify-between font-semibold">
+                   <span>Total</span>
+                   <span className="text-primary">₹{(bidAmount * 1.05).toLocaleString()}</span>
+                 </div>
+               </div>
+ 
+               <div className="flex gap-3">
+                 <Button variant="outline" className="flex-1" onClick={() => setShowJoinDialog(false)}>
+                   Cancel
+                 </Button>
+                 <GlowButton variant="primary" className="flex-1">
+                   Confirm & Pay
+                 </GlowButton>
+               </div>
+             </div>
+           </DialogContent>
+         </Dialog>
         </div>
       </main>
+     <Footer />
     </div>
   );
 };

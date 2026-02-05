@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Shield, Code, Terminal, Users, Trophy, Zap, BookOpen, Target, ArrowRight, Play, Star } from 'lucide-react';
+ import { Code, Terminal, Users, Trophy, Zap, BookOpen, Target, ArrowRight, Play, Star, Shield } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
+ import Footer from '@/components/Footer';
+ import IPSecurityBanner from '@/components/IPSecurityBanner';
 import GlowButton from '@/components/GlowButton';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
-import { Button } from '@/components/ui/button';
 
 const features = [
   {
@@ -47,6 +48,7 @@ const Index = () => {
     <div className="min-h-screen bg-background relative overflow-hidden">
       <ParticleBackground />
       <Navbar />
+       <IPSecurityBanner />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4">
@@ -318,26 +320,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-12 px-4">
-        <div className="container mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-primary" />
-              <span className="font-bold glow-text">SkillCoders</span>
-            </div>
-            <div className="flex gap-8 text-sm text-muted-foreground">
-              <Link to="/courses" className="hover:text-foreground transition-colors">Courses</Link>
-              <Link to="/labs" className="hover:text-foreground transition-colors">Labs</Link>
-              <Link to="/battle" className="hover:text-foreground transition-colors">Battle</Link>
-              <Link to="/career" className="hover:text-foreground transition-colors">Career</Link>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              © 2024 SkillCoders. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+       <Footer />
     </div>
   );
 };

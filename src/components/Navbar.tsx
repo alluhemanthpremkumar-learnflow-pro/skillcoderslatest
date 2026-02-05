@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Shield, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+ import { useState } from 'react';
+ import { Link, useLocation } from 'react-router-dom';
+ import { motion, AnimatePresence } from 'framer-motion';
+ import { Menu, X } from 'lucide-react';
+ import { Button } from '@/components/ui/button';
+ import scLogo from '@/assets/sc_logo.png';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -24,15 +25,17 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <Shield className="w-8 h-8 text-primary" />
-              <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full" />
-            </motion.div>
-            <span className="text-xl font-bold glow-text">SkillCoders</span>
+             <motion.img
+               src={scLogo}
+               alt="SkillCoders"
+               className="h-10 w-auto"
+               whileHover={{ scale: 1.1 }}
+               transition={{ duration: 0.3 }}
+             />
+             <span className="text-xl font-bold">
+               <span className="text-primary">Skill</span>
+               <span className="text-secondary">Coders</span>
+             </span>
           </Link>
 
           {/* Desktop Navigation */}
