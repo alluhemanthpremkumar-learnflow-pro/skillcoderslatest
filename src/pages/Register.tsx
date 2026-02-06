@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Mail, Lock, Eye, EyeOff, User, ArrowRight, GraduationCap, Briefcase } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, GraduationCap, Briefcase } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import GlowButton from '@/components/GlowButton';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-
+import scLogo from '@/assets/sc_logo.png';
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
