@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Shield, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import GlowButton from '@/components/GlowButton';
 import GlowText from '@/components/GlowText';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import scLogo from '@/assets/sc_logo.png';
 
 const socialProviders = [
   {
