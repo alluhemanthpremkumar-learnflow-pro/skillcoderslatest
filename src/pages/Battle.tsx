@@ -1,19 +1,31 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Swords, Users, Trophy, Clock, Shield, Zap, Play, Crown, IndianRupee } from 'lucide-react';
+import { Swords, Users, Trophy, Clock, Shield, Play, IndianRupee } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
- import Footer from '@/components/Footer';
+import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowButton from '@/components/GlowButton';
 import GlowText from '@/components/GlowText';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
- import { Slider } from '@/components/ui/slider';
- import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Slider } from '@/components/ui/slider';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
-const activeBattles = [
+interface BattleData {
+  id: number;
+  title: string;
+  redTeam: { name: string; score: number; members: number };
+  blueTeam: { name: string; score: number; members: number };
+  prize: number;
+  entryFee: number;
+  timeLeft: string;
+  viewers: number;
+  status: string;
+}
+
+const activeBattles: BattleData[] = [
   {
     id: 1,
     title: 'Web App Siege',
@@ -60,15 +72,36 @@ const upcomingBattles = [
 ];
 
 const Battle = () => {
-  const [selectedTeam, setSelectedTeam] = useState<'red' | 'blue' | null>(null);
-   const [bidAmount, setBidAmount] = useState(50);
-   const [showJoinDialog, setShowJoinDialog] = useState(false);
-   const [selectedBattle, setSelectedBattle] = useState<number | null>(null);
- 
-   const handleJoinBattle = (battleId: number) => {
-     setSelectedBattle(battleId);
-     setShowJoinDialog(true);
-   };
+  // Track team selection per battle separately
+  const [selectedTeams, setSelectedTeams] = useState<Record<number, 'red' | 'blue' | null>>({});
+  const [bidAmount, setBidAmount] = useState(50);
+  const [showJoinDialog, setShowJoinDialog] = useState(false);
+  const [selectedBattle, setSelectedBattle] = useState<BattleData | null>(null);
+
+  const handleSelectTeam = (battleId: number, team: 'red' | 'blue') => {
+    setSelectedTeams(prev => ({
+      ...prev,
+      [battleId]: prev[battleId] === team ? null : team,
+    }));
+  };
+
+  const handleJoinBattle = (battle: BattleData) => {
+    if (!selectedTeams[battle.id]) {
+      alert('Please select a team (Red or Blue) before joining!');
+      return;
+    }
+    setSelectedBattle(battle);
+    setShowJoinDialog(true);
+  };
+
+  const handleConfirmJoin = () => {
+    if (selectedBattle && selectedTeams[selectedBattle.id]) {
+      console.log(`Joining ${selectedBattle.title} as ${selectedTeams[selectedBattle.id]} team with bid ₹${bidAmount}`);
+      // Here you would integrate with payment and streaming
+      setShowJoinDialog(false);
+      setBidAmount(50);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -95,14 +128,14 @@ const Battle = () => {
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Join live cybersecurity battles, compete in teams, and win prizes. 
-              Minimum entry fee: ₹50
+              Bid from ₹50 to ₹1,00,000 per battle!
             </p>
           </motion.div>
 
           {/* Active Battles */}
           <section className="mb-12">
             <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+              <div className="w-3 h-3 rounded-full bg-destructive animate-pulse" />
               Live Battles
             </h2>
             
@@ -116,7 +149,7 @@ const Battle = () => {
                 >
                   <GlowCard className="p-0 overflow-hidden" glowColor="purple">
                     {/* Battle Header */}
-                    <div className="p-6 bg-gradient-to-r from-red-500/10 via-transparent to-blue-500/10">
+                    <div className="p-6 bg-gradient-to-r from-destructive/10 via-transparent to-primary/10">
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center gap-2">
                           <Badge variant="destructive" className="animate-pulse">
@@ -137,25 +170,30 @@ const Battle = () => {
                       
                       <h3 className="text-xl font-bold mb-4">{battle.title}</h3>
 
-                      {/* Teams vs */}
+                      {/* Teams vs - SEPARATE SELECTION PER BATTLE */}
                       <div className="grid grid-cols-3 items-center gap-4">
                         {/* Red Team */}
                         <motion.div
                           whileHover={{ scale: 1.02 }}
-                          onClick={() => setSelectedTeam('red')}
+                          onClick={() => handleSelectTeam(battle.id, 'red')}
                           className={`p-4 rounded-xl cursor-pointer transition-all ${
-                            selectedTeam === 'red' 
-                              ? 'bg-red-500/20 border-2 border-red-500' 
-                              : 'bg-red-500/10 border border-red-500/30 hover:border-red-500/60'
+                            selectedTeams[battle.id] === 'red' 
+                              ? 'bg-destructive/20 border-2 border-destructive shadow-[0_0_20px_hsl(var(--destructive)/0.4)]' 
+                              : 'bg-destructive/10 border border-destructive/30 hover:border-destructive/60'
                           }`}
                         >
                           <div className="text-center">
-                            <Shield className="w-8 h-8 text-red-500 mx-auto mb-2" />
+                            <Shield className="w-8 h-8 text-destructive mx-auto mb-2" />
                             <p className="font-semibold text-sm">{battle.redTeam.name}</p>
-                            <p className="text-2xl font-bold text-red-500">{battle.redTeam.score}</p>
+                            <p className="text-2xl font-bold text-destructive">{battle.redTeam.score}</p>
                             <p className="text-xs text-muted-foreground">
                               {battle.redTeam.members} members
                             </p>
+                            {selectedTeams[battle.id] === 'red' && (
+                              <Badge className="mt-2 bg-destructive text-destructive-foreground">
+                                Selected
+                              </Badge>
+                            )}
                           </div>
                         </motion.div>
 
@@ -176,20 +214,25 @@ const Battle = () => {
                         {/* Blue Team */}
                         <motion.div
                           whileHover={{ scale: 1.02 }}
-                          onClick={() => setSelectedTeam('blue')}
+                          onClick={() => handleSelectTeam(battle.id, 'blue')}
                           className={`p-4 rounded-xl cursor-pointer transition-all ${
-                            selectedTeam === 'blue' 
-                              ? 'bg-blue-500/20 border-2 border-blue-500' 
-                              : 'bg-blue-500/10 border border-blue-500/30 hover:border-blue-500/60'
+                            selectedTeams[battle.id] === 'blue' 
+                              ? 'bg-primary/20 border-2 border-primary shadow-[0_0_20px_hsl(var(--primary)/0.4)]' 
+                              : 'bg-primary/10 border border-primary/30 hover:border-primary/60'
                           }`}
                         >
                           <div className="text-center">
-                            <Shield className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+                            <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
                             <p className="font-semibold text-sm">{battle.blueTeam.name}</p>
-                            <p className="text-2xl font-bold text-blue-500">{battle.blueTeam.score}</p>
+                            <p className="text-2xl font-bold text-primary">{battle.blueTeam.score}</p>
                             <p className="text-xs text-muted-foreground">
                               {battle.blueTeam.members} members
                             </p>
+                            {selectedTeams[battle.id] === 'blue' && (
+                              <Badge className="mt-2 bg-primary text-primary-foreground">
+                                Selected
+                              </Badge>
+                            )}
                           </div>
                         </motion.div>
                       </div>
@@ -206,17 +249,18 @@ const Battle = () => {
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground">Entry Fee</p>
+                          <p className="text-xs text-muted-foreground">Min Entry</p>
                           <p className="text-lg font-bold text-primary flex items-center gap-1">
                             <IndianRupee className="w-4 h-4" />
                             {battle.entryFee}
                           </p>
                         </div>
                       </div>
-                      <GlowButton variant="primary">
-                       <span onClick={(e) => { e.stopPropagation(); handleJoinBattle(battle.id); }}>
-                         Join Battle
-                       </span>
+                      <GlowButton 
+                        variant="primary"
+                        onClick={() => handleJoinBattle(battle)}
+                      >
+                        Join Battle
                       </GlowButton>
                     </div>
                   </GlowCard>
@@ -279,81 +323,114 @@ const Battle = () => {
               ))}
             </div>
           </section>
-         {/* Join Battle Dialog */}
-         <Dialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
-           <DialogContent className="sm:max-w-md">
-             <DialogHeader>
-               <DialogTitle className="text-center">
-                 <span className="text-primary">Join</span> Battle Arena
-               </DialogTitle>
-             </DialogHeader>
-             <div className="space-y-6 py-4">
-               <div className="text-center">
-                 <p className="text-muted-foreground mb-4">
-                   Set your bid amount to join the battle
-                 </p>
-                 <div className="text-4xl font-bold text-primary mb-2">
-                   ₹{bidAmount.toLocaleString()}
-                 </div>
-               </div>
-               
-               <div className="space-y-4">
-                 <div className="flex justify-between text-sm text-muted-foreground">
-                   <span>Min: ₹50</span>
-                   <span>Max: ₹1,00,000</span>
-                 </div>
-                 <Slider
-                   value={[bidAmount]}
-                   onValueChange={(value) => setBidAmount(value[0])}
-                   min={50}
-                   max={100000}
-                   step={50}
-                   className="w-full"
-                 />
-                 <div className="grid grid-cols-4 gap-2">
-                   {[100, 500, 1000, 5000].map((amount) => (
-                     <Button
-                       key={amount}
-                       variant="outline"
-                       size="sm"
-                       onClick={() => setBidAmount(amount)}
-                       className={bidAmount === amount ? 'border-primary text-primary' : ''}
-                     >
-                       ₹{amount}
-                     </Button>
-                   ))}
-                 </div>
-               </div>
- 
-               <div className="bg-card border border-border rounded-lg p-4 space-y-2">
-                 <div className="flex justify-between text-sm">
-                   <span className="text-muted-foreground">Bid Amount</span>
-                   <span>₹{bidAmount.toLocaleString()}</span>
-                 </div>
-                 <div className="flex justify-between text-sm">
-                   <span className="text-muted-foreground">Platform Fee (5%)</span>
-                   <span>₹{(bidAmount * 0.05).toLocaleString()}</span>
-                 </div>
-                 <div className="border-t border-border pt-2 flex justify-between font-semibold">
-                   <span>Total</span>
-                   <span className="text-primary">₹{(bidAmount * 1.05).toLocaleString()}</span>
-                 </div>
-               </div>
- 
-               <div className="flex gap-3">
-                 <Button variant="outline" className="flex-1" onClick={() => setShowJoinDialog(false)}>
-                   Cancel
-                 </Button>
-                 <GlowButton variant="primary" className="flex-1">
-                   Confirm & Pay
-                 </GlowButton>
-               </div>
-             </div>
-           </DialogContent>
-         </Dialog>
+
+          {/* Join Battle Dialog with Bid Customization */}
+          <Dialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-center">
+                  Join <span className="text-primary">{selectedBattle?.title}</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                {/* Selected Team Display */}
+                {selectedBattle && selectedTeams[selectedBattle.id] && (
+                  <div className="text-center">
+                    <p className="text-muted-foreground mb-2">You are joining as:</p>
+                    <Badge 
+                      className={`text-lg px-4 py-2 ${
+                        selectedTeams[selectedBattle.id] === 'red' 
+                          ? 'bg-destructive text-destructive-foreground' 
+                          : 'bg-primary text-primary-foreground'
+                      }`}
+                    >
+                      <Shield className="w-5 h-5 mr-2" />
+                      {selectedTeams[selectedBattle.id] === 'red' 
+                        ? selectedBattle.redTeam.name 
+                        : selectedBattle.blueTeam.name}
+                    </Badge>
+                  </div>
+                )}
+
+                <div className="text-center">
+                  <p className="text-muted-foreground mb-4">
+                    Set your bid amount (₹50 - ₹1,00,000)
+                  </p>
+                  <div className="text-4xl font-bold text-primary mb-2">
+                    ₹{bidAmount.toLocaleString()}
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>Min: ₹50</span>
+                    <span>Max: ₹1,00,000</span>
+                  </div>
+                  <Slider
+                    value={[bidAmount]}
+                    onValueChange={(value) => setBidAmount(value[0])}
+                    min={50}
+                    max={100000}
+                    step={50}
+                    className="w-full"
+                  />
+                  <div className="grid grid-cols-4 gap-2">
+                    {[100, 500, 1000, 5000].map((amount) => (
+                      <Button
+                        key={amount}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBidAmount(amount)}
+                        className={bidAmount === amount ? 'border-primary text-primary' : ''}
+                      >
+                        ₹{amount}
+                      </Button>
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[10000, 25000, 50000, 100000].map((amount) => (
+                      <Button
+                        key={amount}
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setBidAmount(amount)}
+                        className={bidAmount === amount ? 'border-primary text-primary' : ''}
+                      >
+                        ₹{(amount / 1000).toFixed(0)}K
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-card border border-border rounded-lg p-4 space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Bid Amount</span>
+                    <span>₹{bidAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Platform Fee (5%)</span>
+                    <span>₹{(bidAmount * 0.05).toLocaleString()}</span>
+                  </div>
+                  <div className="border-t border-border pt-2 flex justify-between font-semibold">
+                    <span>Total</span>
+                    <span className="text-primary">₹{(bidAmount * 1.05).toLocaleString()}</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1" onClick={() => setShowJoinDialog(false)}>
+                    Cancel
+                  </Button>
+                  <GlowButton variant="primary" className="flex-1" onClick={handleConfirmJoin}>
+                    Confirm & Pay
+                  </GlowButton>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </main>
-     <Footer />
+      <Footer />
     </div>
   );
 };

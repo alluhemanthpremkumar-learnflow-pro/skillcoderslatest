@@ -78,8 +78,8 @@ const Login = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <Link to="/" className="inline-flex items-center gap-2">
-              <Shield className="w-10 h-10 text-primary" />
+            <Link to="/" className="inline-flex items-center gap-3">
+              <img src={scLogo} alt="SkillCoders Logo" className="w-12 h-12 object-contain" />
               <span className="text-2xl font-bold glow-text">SkillCoders</span>
             </Link>
           </motion.div>
