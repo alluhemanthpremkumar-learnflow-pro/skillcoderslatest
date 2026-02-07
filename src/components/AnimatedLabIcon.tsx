@@ -38,18 +38,17 @@ const getAnimation = (name: string) => {
         },
       };
     case 'Parrot OS':
-      // Parrot: fly and rotate
+      // Parrot: wing flapping effect
       return {
         animate: {
-          y: [0, -10, -5, -12, 0],
-          x: [0, 5, -3, 4, 0],
-          rotate: [0, 15, -10, 20, 0],
-          scale: [1, 1.1, 0.95, 1.1, 1],
+          scaleX: [1, 0.7, 1, 0.7, 1],
+          y: [0, -6, -2, -8, 0],
+          rotate: [0, -5, 5, -3, 0],
         },
         transition: {
-          duration: 3,
+          duration: 0.8,
           repeat: Infinity,
-          repeatDelay: 1,
+          repeatDelay: 0.3,
           ease: 'easeInOut' as const,
         },
       };

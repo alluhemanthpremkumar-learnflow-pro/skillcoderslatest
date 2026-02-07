@@ -126,23 +126,25 @@
            {!isComplete ? (
              <>
                {/* Header */}
-               <div className="mb-6">
-                 <div className="flex items-center justify-between mb-2">
-                   <span className="text-sm text-muted-foreground">
-                     {domainName} • Level {level}
-                   </span>
-                   <div className="flex items-center gap-2 text-sm">
-                     <Clock className={`w-4 h-4 ${timeLeft <= 10 ? 'text-red-500' : 'text-muted-foreground'}`} />
-                     <span className={timeLeft <= 10 ? 'text-red-500 font-bold' : ''}>
-                       {timeLeft}s
-                     </span>
-                   </div>
-                 </div>
-                 <Progress value={progress} className="h-2" />
-                 <p className="text-xs text-muted-foreground mt-1">
-                   Question {currentIndex + 1} of {questions.length}
-                 </p>
-               </div>
+                <div className="mb-6">
+                  <div className="flex items-center justify-center mb-3">
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border ${timeLeft <= 10 ? 'border-red-500/50 bg-red-500/10' : 'border-border bg-muted/50'}`}>
+                      <Clock className={`w-5 h-5 ${timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-primary'}`} />
+                      <span className={`text-lg font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-foreground'}`}>
+                        {timeLeft}s
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm text-muted-foreground">
+                      {domainName} • Level {level}
+                    </span>
+                    <p className="text-xs text-muted-foreground">
+                      Question {currentIndex + 1} of {questions.length}
+                    </p>
+                  </div>
+                  <Progress value={progress} className="h-2" />
+                </div>
  
                {/* Question */}
                <motion.div
