@@ -190,15 +190,26 @@ const Login = () => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="flex items-center justify-between text-sm"
+                className="space-y-3"
               >
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-border" />
-                  <span className="text-muted-foreground">Remember me</span>
-                </label>
-                <Link to="/forgot-password" className="text-primary hover:underline">
-                  Forgot password?
-                </Link>
+                <div className="flex items-center justify-between text-sm">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="rounded border-border" />
+                    <span className="text-muted-foreground">Remember me</span>
+                  </label>
+                  <Link to="/forgot-password" className="text-primary hover:underline">
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="flex items-start gap-2">
+                  <input type="checkbox" id="login-terms" className="mt-1 rounded border-border" required />
+                  <label htmlFor="login-terms" className="text-xs text-muted-foreground">
+                    By signing in, I agree to the{' '}
+                    <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
+                    {' '}and{' '}
+                    <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+                  </label>
+                </div>
               </motion.div>
 
               <motion.div
