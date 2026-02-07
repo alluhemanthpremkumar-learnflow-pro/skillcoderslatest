@@ -191,12 +191,14 @@ const Register = () => {
                 transition={{ delay: 0.6 }}
                 className="flex items-start gap-2"
               >
-                <input type="checkbox" id="terms" className="mt-1 rounded border-border" />
+                <input type="checkbox" id="terms" className="mt-1 rounded border-border" required />
                 <label htmlFor="terms" className="text-sm text-muted-foreground">
                   I agree to the{' '}
-                  <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
+                  <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>,{' '}
+                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>,
                   {' '}and{' '}
-                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+                  <Link to="/code-of-conduct" className="text-primary hover:underline">Code of Conduct</Link>.
+                  I understand my data will be processed as described in the Privacy Policy.
                 </label>
               </motion.div>
 

@@ -154,7 +154,7 @@ const Career = () => {
               Share your cybersecurity expertise with thousands of students. 
               Part-time or full-time opportunities available.
             </p>
-            <Link to="/register?role=instructor">
+            <Link to="/instructor-apply">
               <GlowButton variant="secondary" size="lg">
                 <span className="flex items-center gap-2">
                   Apply as Instructor
@@ -213,7 +213,7 @@ const Career = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to="/register?role=instructor&type=part-time">
+                <Link to="/instructor-apply">
                   <GlowButton variant="outline" className="w-full">
                     Apply Part-Time
                   </GlowButton>
@@ -234,7 +234,7 @@ const Career = () => {
                     </li>
                   ))}
                 </ul>
-                <Link to="/register?role=instructor&type=full-time">
+                <Link to="/instructor-apply">
                   <GlowButton variant="secondary" className="w-full">
                     Apply Full-Time
                   </GlowButton>
