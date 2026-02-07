@@ -21,11 +21,11 @@ const GlowButton = ({
   disabled = false,
    type = 'button',
 }: GlowButtonProps) => {
-  const baseStyles = "relative font-semibold rounded-lg transition-all duration-300 overflow-hidden";
+  const baseStyles = "relative font-semibold rounded-lg transition-all duration-300 overflow-hidden shadow-[0_0_12px_hsl(var(--cyber-blue)/0.25),0_0_24px_hsl(var(--cyber-blue)/0.1)] hover:shadow-[0_0_20px_hsl(var(--cyber-blue)/0.4),0_0_40px_hsl(var(--cyber-blue)/0.15)]";
   
   const variants = {
     primary: "bg-primary text-primary-foreground hover:bg-primary/90",
-    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90",
+    secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-[0_0_12px_hsl(var(--cyber-purple)/0.25),0_0_24px_hsl(var(--cyber-purple)/0.1)] hover:shadow-[0_0_20px_hsl(var(--cyber-purple)/0.4),0_0_40px_hsl(var(--cyber-purple)/0.15)]",
     outline: "border border-primary text-primary hover:bg-primary/10",
   };
 

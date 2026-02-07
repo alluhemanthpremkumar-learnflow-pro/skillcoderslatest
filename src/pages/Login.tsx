@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight, ArrowLeft } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import GlowButton from '@/components/GlowButton';
 import GlowText from '@/components/GlowText';
@@ -56,6 +56,7 @@ const socialProviders = [
 ];
 
 const Login = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -72,6 +73,19 @@ const Login = () => {
 
       <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="max-w-md mx-auto">
+          {/* Go Back Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.05, x: -4 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 group transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:text-primary transition-colors" />
+            <span className="text-sm font-medium">Go Back</span>
+          </motion.button>
+
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}

@@ -2,10 +2,11 @@ import { motion } from 'framer-motion';
 import { Terminal, Server, Monitor, Play, Clock, Shield, Cpu, HardDrive, Zap } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import Navbar from '@/components/Navbar';
- import Footer from '@/components/Footer';
+import Footer from '@/components/Footer';
 import GlowCard from '@/components/GlowCard';
 import GlowText from '@/components/GlowText';
 import GlowButton from '@/components/GlowButton';
+import AnimatedLabIcon from '@/components/AnimatedLabIcon';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
@@ -147,7 +148,7 @@ const Labs = () => {
                 <GlowCard glowColor={lab.color} className={!lab.available ? 'opacity-60' : ''}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className="text-4xl">{lab.icon}</div>
+                      <AnimatedLabIcon icon={lab.icon} name={lab.name} />
                       <div>
                         <h3 className="text-lg font-semibold">{lab.name}</h3>
                         <Badge 
