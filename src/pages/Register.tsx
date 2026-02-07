@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, Eye, EyeOff, User, ArrowRight, GraduationCap, Briefcase } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, User, ArrowRight, ArrowLeft, GraduationCap, Briefcase } from 'lucide-react';
 import ParticleBackground from '@/components/ParticleBackground';
 import GlowButton from '@/components/GlowButton';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import scLogo from '@/assets/sc_logo.png';
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -28,6 +29,19 @@ const Register = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-md mx-auto">
+          {/* Go Back Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.05, x: -4 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground mb-6 group transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:text-primary transition-colors" />
+            <span className="text-sm font-medium">Go Back</span>
+          </motion.button>
+
           {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
