@@ -31,7 +31,7 @@ export const usePaymentProcessor = () => {
       courseId?: string,
       courseName?: string
     ): Promise<boolean> => {
-      if (!user || !userProfile) {
+      if (!userProfile) {
         toast({
           title: 'Please login first',
           description: 'You need to be logged in to make a payment',
@@ -45,8 +45,8 @@ export const usePaymentProcessor = () => {
 
       try {
         const paymentDetails: PaymentDetails = {
-          userId: user.uid,
-          email: user.email || userProfile.email,
+          userId: user?.uid || userProfile.id,
+          email: user?.email || userProfile.email,
           name: userProfile.displayName || 'User',
           planName,
           amount,
@@ -111,7 +111,7 @@ export const useEnrollCourse = () => {
       courseName: string,
       planName: string = 'Individual Course'
     ): Promise<boolean> => {
-      if (!user || !userProfile) {
+      if (!userProfile) {
         toast({
           title: 'Please login first',
           variant: 'destructive',
@@ -124,8 +124,8 @@ export const useEnrollCourse = () => {
       try {
         // Log enrollment
         const enrollment: UserEnrollment = {
-          userId: user.uid,
-          email: user.email || userProfile.email,
+          userId: user?.uid || userProfile.id,
+          email: user?.email || userProfile.email,
           name: userProfile.displayName || 'User',
           plan: planName,
           courseIds: [courseId],

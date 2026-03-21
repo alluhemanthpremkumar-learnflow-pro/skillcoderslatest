@@ -44,7 +44,7 @@ const sampleModules = [
 const CourseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user, userProfile, loading } = useAuth();
   
   const course = sampleCourses.find(c => c.id === id);
   const { processPayment, isProcessing, error } = usePaymentProcessor();
@@ -73,7 +73,7 @@ const CourseDetail = () => {
   const handleEnrollClick = async () => {
     if (loading) return; // Prevent action while auth state is resolving
     
-    if (!user) {
+    if (!userProfile) {
       toast.error("Please log in to enroll in this course.");
       navigate('/login');
       return;
@@ -96,7 +96,7 @@ const CourseDetail = () => {
   const handleAddToCart = () => {
     if (loading) return;
     
-    if (!user) {
+    if (!userProfile) {
       toast.error("Please log in to add items to your cart.");
       navigate('/login');
       return;
@@ -125,7 +125,7 @@ const CourseDetail = () => {
   const handleToggleWishlist = () => {
     if (loading) return;
     
-    if (!user) {
+    if (!userProfile) {
       toast.error("Please log in to use the wishlist.");
       navigate('/login');
       return;

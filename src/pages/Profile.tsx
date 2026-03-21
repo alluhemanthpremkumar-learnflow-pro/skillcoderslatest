@@ -26,7 +26,7 @@ const Profile = () => {
     );
   }
 
-  if (!user) {
+  if (!userProfile) {
     navigate('/login');
     return null;
   }
@@ -40,14 +40,14 @@ const Profile = () => {
         <div className="container mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">
-              My <GlowText as="span" color="gradient" animate={false} children={undefined}>Profile</GlowText>
+              My <GlowText as="span" color="gradient" animate={false}>Profile</GlowText>
             </h1>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {/* Profile Card */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="md:col-span-1">
-              <GlowCard glowColor="purple" children={undefined}>
+              <GlowCard glowColor="purple">
                 <div className="text-center">
                   <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 overflow-hidden">
                     {userProfile?.photoURL ? (
@@ -71,7 +71,7 @@ const Profile = () => {
               transition={{ delay: 0.1 }}
               className="md:col-span-2 space-y-4"
             >
-              <GlowCard glowColor="blue" children={undefined}>
+              <GlowCard glowColor="blue">
                 <h3 className="text-lg font-semibold mb-4">Account Details</h3>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
@@ -99,19 +99,19 @@ const Profile = () => {
               </GlowCard>
 
               <div className="grid grid-cols-2 gap-4">
-                <GlowCard glowColor="cyan" children={undefined}>
+                <GlowCard glowColor="cyan">
                   <BookOpen className="w-8 h-8 text-primary mb-2" />
                   <p className="text-2xl font-bold">0</p>
                   <p className="text-sm text-muted-foreground">Enrolled Courses</p>
                 </GlowCard>
-                <GlowCard glowColor="purple" children={undefined}>
+                <GlowCard glowColor="purple">
                   <Award className="w-8 h-8 text-secondary mb-2" />
                   <p className="text-2xl font-bold">0</p>
                   <p className="text-sm text-muted-foreground">Certificates</p>
                 </GlowCard>
               </div>
 
-              <GlowButton variant="outline" size="lg" className="w-full" onClick={handleLogout} children={undefined}>
+              <GlowButton variant="outline" size="lg" className="w-full" onClick={handleLogout}>
                 <span className="flex items-center gap-2"><LogOut className="w-5 h-5" /> Sign Out</span>
               </GlowButton>
             </motion.div>

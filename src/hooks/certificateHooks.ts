@@ -29,7 +29,7 @@ export const useCertificateGenerator = () => {
       courseName: string,
       completionPercentage: number = 100
     ): Promise<boolean> => {
-      if (!user || !userProfile) {
+      if (!userProfile) {
         toast({
           title: 'Please login first',
           variant: 'destructive',
@@ -43,8 +43,8 @@ export const useCertificateGenerator = () => {
       try {
         // Create certificate record
         const certificate = await createCertificate(
-          user.uid,
-          user.email || userProfile.email,
+          user?.uid || userProfile.id,
+          user?.email || userProfile.email,
           userProfile.displayName || 'User',
           courseId,
           courseName,
@@ -103,14 +103,14 @@ export const useCertificateGenerator = () => {
 export const useUserCertificates = () => {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
 
   const fetchCertificates = useCallback(async () => {
-    if (!user) return;
+    if (!userProfile) return;
 
     setIsLoading(true);
     try {
-      const certs = await getUserCertificates(user.uid);
+      const certs = await getUserCertificates(user?.uid || userProfile.id);
       setCertificates(certs);
     } catch (err) {
       console.error('Error fetching certificates:', err);
